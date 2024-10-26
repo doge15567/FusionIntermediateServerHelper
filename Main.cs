@@ -10,7 +10,7 @@ namespace FusionIntermediateServerHelper
         internal const string Description = "\"I,       am steve.\"";
         internal const string Author = "doge15567";
         internal const string Company = "";
-        internal const string Version = "0.0.1";
+        internal const string Version = "1.0.1";
         internal const string DownloadLink = "Link";
         internal static MelonLogger.Instance MelonLog;
         internal static Main Instance;

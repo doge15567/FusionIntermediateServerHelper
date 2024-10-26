@@ -20,6 +20,7 @@ namespace FusionIntermediateServerHelper
                 [HarmonyPatch(nameof(SpawnRequestMessage.HandleMessage))]
                 public static bool Prefix(byte[] bytes, bool isServerHandled = false)
                 {
+                    if (Prefs.SpawnableBlockingEnabled.Value == false) return true;
                     if (!isServerHandled)
                     {
                         return true; // allow original method to handle error
@@ -30,6 +31,7 @@ namespace FusionIntermediateServerHelper
 
                     var playerId = PlayerIdManager.GetPlayerId(data.owner);
                     
+                    if (playerId == PlayerIdManager.LocalId) return true; // replace when perm system is in
 
                     string[] blockedCodes = Prefs.GetBlockedBarcodes();
                     if (blockedCodes.Contains(data.barcode))

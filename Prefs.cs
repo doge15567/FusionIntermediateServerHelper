@@ -15,13 +15,16 @@ namespace FusionIntermediateServerHelper
         {
             public static readonly MelonPreferences_Category GlobalCategory = MelonPreferences.CreateCategory("FusionIntermediateServerHelper");
             public static MelonPreferences_Entry<int> loggingMode;
+            public static MelonPreferences_Entry<bool> SpawnableBlockingEnabled;
             public static MelonPreferences_Entry<string> JSONStringListBlockedSpawnables;
 
 
             public static void RefreshMelonPrefs()
             {
                 string defaultjson = JsonSerializer.Serialize(new string[2] { "stayx.weaponpack.Spawnable.NuclearBomb", "stayx.weaponpack.Spawnable.Pref" }, prettyPrint);
+
                 loggingMode = GlobalCategory.GetEntry<int>("loggingMode") ?? GlobalCategory.CreateEntry("loggingMode", 1);
+                SpawnableBlockingEnabled = GlobalCategory.GetEntry<bool>("SpawnableBlockingEnabled") ?? GlobalCategory.CreateEntry("SpawnableBlockingEnabled", false);
                 JSONStringListBlockedSpawnables = GlobalCategory.GetEntry<string>("JSONStringListBlockedSpawnables") ?? GlobalCategory.CreateEntry("JSONStringListBlockedSpawnables", defaultjson);
 
                 GlobalCategory.SaveToFile(false);

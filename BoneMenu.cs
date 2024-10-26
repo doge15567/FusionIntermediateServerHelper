@@ -5,6 +5,7 @@ using BoneLib.BoneMenu;
 using LabFusion.Network;
 using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow.Warehouse;
+using Il2CppSLZ.Marrow.Pool;
 
 namespace FusionIntermediateServerHelper
 {
@@ -19,9 +20,12 @@ namespace FusionIntermediateServerHelper
             public static void Setup()
             {
                 _mainCategory = BoneLib.BoneMenu.Page.Root.CreatePage("Fusion Intermediate Server Helper", mainColor);
-                _blockedItemsList = _mainCategory.CreatePage("Blocked Spawnables", Color.white);
+
+                Page SpawnableBlockingPage = _mainCategory.CreatePage("Spawnable Blocking", Color.white);
+                SpawnableBlockingPage.CreateBool("Enabled", Color.white, Prefs.SpawnableBlockingEnabled.Value, (val) => { Prefs.SpawnableBlockingEnabled.Value = val; Prefs.GlobalCategory.SaveToFile(false); });
+                _blockedItemsList = SpawnableBlockingPage.CreatePage("Blocked Spawnables", Color.white);
                 _blockedItemsList.CreateFunction("Refresh", Color.yellow, RefreshBlockedItems);
-                _mainCategory.CreateFunction("Add Spawnable to Blocklist from Spawn Gun (Left Hand)", Color.white, () => 
+                SpawnableBlockingPage.CreateFunction("Add Spawnable to Blocklist from Spawn Gun (Left Hand)", Color.white, () => 
                 {
                     string errortext = "";
                     try
@@ -57,7 +61,36 @@ namespace FusionIntermediateServerHelper
                         BoneMenuNotif(BoneLib.Notifications.NotificationType.Error, errortext, .5f);
                     }
                 });
-                _mainCategory.CreateString("Add Spawnable to Blocklist from string", Color.white, "", (barcode) => 
+                SpawnableBlockingPage.CreateFunction("Add Spawnable in hand to Blocklist", Color.white, () => 
+                {
+                    string errortext = "";
+                    try
+                    {
+                        if (BoneLib.Player.GetObjectInHand(BoneLib.Player.LeftHand) == null)
+                        { errortext = "Error: Nothing in left hand."; throw new Exception(); }
+                        if (BoneLib.Player.GetComponentInHand<Poolee>(BoneLib.Player.LeftHand).SpawnableCrate == null)
+                        { errortext = "Error: Object is not a spawnable, or is a prefab."; throw new Exception(); }
+
+                        string barcode = BoneLib.Player.GetComponentInHand<Poolee>(BoneLib.Player.LeftHand).SpawnableCrate.Barcode.ID;
+
+                        var blockeds = Prefs.GetBlockedBarcodes();
+                        if (!blockeds.Contains(barcode))
+                        {
+                            var newblockeds = blockeds.ToList();
+                            newblockeds.Add(barcode);
+                            Prefs.SetBlockedBarcodes(newblockeds.ToArray());
+                            var title = TryGetTitleFromBarcode(barcode);
+                            BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, $"Added {title} to blocklist!", 1.5f);
+                        }
+                        else
+                        { errortext = "Error: The spawnable selected is already blocked."; throw new Exception(); }
+                    }
+                    catch (Exception)
+                    {
+                        BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, errortext);
+                    }
+                });
+                SpawnableBlockingPage.CreateString("Add Spawnable to Blocklist from string", Color.white, "", (barcode) => 
                 {
                     var blockeds = Prefs.GetBlockedBarcodes();
                     if (!blockeds.Contains(barcode))
@@ -71,7 +104,7 @@ namespace FusionIntermediateServerHelper
                     else
                     { BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, "Error: The spawnable selected is already blocked.", 1.5f);}
                 });
-                
+                // add pref for permission level allowed to spawn blocked spawnables
             }
 
             public static void RefreshBlockedItems() 

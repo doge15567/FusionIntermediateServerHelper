@@ -3,6 +3,8 @@ using FusionIntermediateServerHelper;
 using MelonLoader;
 
 [assembly: AssemblyDescription(FusionIntermediateServerHelper.Main.Description)]
+[assembly: AssemblyVersion(FusionIntermediateServerHelper.Main.Version)]
+[assembly: AssemblyFileVersion(FusionIntermediateServerHelper.Main.Version)]
 [assembly: AssemblyCopyright("Developed by " + FusionIntermediateServerHelper.Main.Author)]
 [assembly: AssemblyTrademark(FusionIntermediateServerHelper.Main.Company)]
 [assembly: MelonInfo(typeof(FusionIntermediateServerHelper.Main), FusionIntermediateServerHelper.Main.Name, FusionIntermediateServerHelper.Main.Version, FusionIntermediateServerHelper.Main.Author, FusionIntermediateServerHelper.Main.DownloadLink)]
