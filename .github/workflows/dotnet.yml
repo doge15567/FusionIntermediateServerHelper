@@ -16,16 +16,36 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+
+    - name: release-downloader - Download Fusion v1.8.0
+      uses: robinraju/release-downloader@v1.11
+      with:
+        repository: 'Lakatrazz/BONELAB-Fusion'
+        tag: 'v1.8.0'
+        fileName: 'LabFusion.dll'
+        out-file-path: 'Resources'
+    
+    - name: release-downloader - Download BoneLib v3.1.1
+      uses: robinraju/release-downloader@v1.11
+      with:
+        repository: 'yowchap/BoneLib'
+        tag: 'v3.1.1'
+        fileName: 'BoneLib.dll'
+        out-file-path: 'Resources'
+
     - name: Build
       run: dotnet build
+
     - name: Upload build to actions
       uses: actions/upload-artifact@v4
       with:
-        name: code-coverage-report
+        name: fish-bin-artifacts
         path: bin
