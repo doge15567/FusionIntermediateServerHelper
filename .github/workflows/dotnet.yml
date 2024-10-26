@@ -5,6 +5,8 @@ name: .NET BONELAB Mod w/ dependencies
 
 on:
   push:
+    paths:
+        - '**.cs'
 
 jobs:
   build:
