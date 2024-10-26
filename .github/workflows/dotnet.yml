@@ -1,0 +1,57 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET BONELAB Mod w/ dependencies
+
+on:
+  push:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: release-downloader - Download Fusion v1.8.0
+      uses: robinraju/release-downloader@v1.11
+      with:
+        repository: 'Lakatrazz/BONELAB-Fusion'
+        tag: 'v1.8.0'
+        fileName: 'LabFusion.dll'
+        out-file-path: 'Resources'
+    
+    - name: release-downloader - Download BoneLib v3.1.1
+      uses: robinraju/release-downloader@v1.11
+      with:
+        repository: 'yowchap/BoneLib'
+        tag: 'v3.1.1'
+        fileName: 'BoneLib.dll'
+        out-file-path: 'Resources'
+
+    - name: Build Debug
+      run: dotnet build
+  
+    - name: Build Release
+      run: dotnet build -c Release
+
+    - name: Upload Debug Builds
+      uses: actions/upload-artifact@v4
+      with:
+        name: Debug
+        path: bin/Debug/**/FusionIntermediateServerHelper.???
+    
+    - name: Upload Release Builds
+      uses: actions/upload-artifact@v4
+      with:
+        name: Release
+        path: bin/Release/**/FusionIntermediateServerHelper.???
