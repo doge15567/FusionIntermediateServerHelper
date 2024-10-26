@@ -6,6 +6,10 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
 
+	<PropertyGroup>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Bonelab.GameLibs.Steam" Version="6.0.0" />
   </ItemGroup>
