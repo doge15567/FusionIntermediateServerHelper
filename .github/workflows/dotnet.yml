@@ -44,8 +44,14 @@ jobs:
     - name: Build Release
       run: dotnet build -c Release
 
-    - name: Upload build to actions
+    - name: Upload Debug Builds
       uses: actions/upload-artifact@v4
       with:
-        name: fish-bin-artifacts
-        path: bin
+        name: Debug
+        path: bin/Debug/**/FusionIntermediateServerHelper.{dll,pdb}
+    
+    - name: Upload Release Builds
+      uses: actions/upload-artifact@v4
+      with:
+        name: Release
+        path: bin/Release/**/FusionIntermediateServerHelper.{dll,pdb}
