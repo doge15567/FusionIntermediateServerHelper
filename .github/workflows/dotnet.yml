@@ -41,8 +41,11 @@ jobs:
         fileName: 'BoneLib.dll'
         out-file-path: 'Resources'
 
-    - name: Build
+    - name: Build Debug
       run: dotnet build
+  
+    - name: Build Release
+      run: dotnet build -c Release
 
     - name: Upload build to actions
       uses: actions/upload-artifact@v4
