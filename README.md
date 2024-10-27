@@ -29,5 +29,4 @@ Bone Menu
     └ Add Spawnable to Blocklist from string (string): Adds the spawnable directly to the blocklist using its barcode.
 ```
 
-
-Note: 💤 means will implement tomor- zzzzzzzzzzzzzzzz
+See [Actions tab](https://github.com/doge15567/FusionIntermediateServerHelper/actions) for beta builds!
