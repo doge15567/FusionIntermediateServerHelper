@@ -6,6 +6,7 @@ using LabFusion.Network;
 using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow.Warehouse;
 using Il2CppSLZ.Marrow.Pool;
+using LabFusion.Representation;
 
 namespace FusionIntermediateServerHelper
 {
@@ -22,7 +23,8 @@ namespace FusionIntermediateServerHelper
                 _mainCategory = BoneLib.BoneMenu.Page.Root.CreatePage("Fusion Intermediate Server Helper", mainColor);
 
                 Page SpawnableBlockingPage = _mainCategory.CreatePage("Spawnable Blocking", Color.white);
-                SpawnableBlockingPage.CreateBool("Enabled", Color.white, Prefs.SpawnableBlockingEnabled.Value, (val) => { Prefs.SpawnableBlockingEnabled.Value = val; Prefs.GlobalCategory.SaveToFile(false); });
+                SpawnableBlockingPage.CreateBoolPref("Enabled", Color.white, ref Prefs.SpawnableBlockingEnabled);
+                SpawnableBlockingPage.CreateEnumPref("Spawn Blocked Spawnables Allowed Permission Level", Color.white, ref Prefs.SpawnBlockedSpawnablesAllowed);
                 _blockedItemsList = SpawnableBlockingPage.CreatePage("Blocked Spawnables", Color.white);
                 _blockedItemsList.CreateFunction("Refresh", Color.yellow, RefreshBlockedItems);
                 SpawnableBlockingPage.CreateFunction("Add Spawnable to Blocklist from Spawn Gun (Left Hand)", Color.white, () => 
@@ -105,6 +107,7 @@ namespace FusionIntermediateServerHelper
                     { BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, "Error: The spawnable selected is already blocked.", 1.5f);}
                 });
                 // add pref for permission level allowed to spawn blocked spawnables
+
             }
 
             public static void RefreshBlockedItems() 
@@ -142,7 +145,7 @@ namespace FusionIntermediateServerHelper
                 // Fusion automaticaly creates dismiss and message
 
                 page.CreateFunction($"Spawnable Blocked: {spawnableName}", Color.white, null);
-                page.CreateFunction($"Player Guilty: {playerName}", Color.white, null);
+                page.CreateFunction($"Player: {playerName}", Color.white, null);
                 page.CreateFunction("Unblock Spawnable", Color.green, () =>
                 {
                     Menu.DisplayDialog(
@@ -165,7 +168,7 @@ namespace FusionIntermediateServerHelper
                 {
                     Menu.DisplayDialog(
                         $"Kick {playerName} for spawning {spawnableName}?",
-                        $"Are you sure you want to kick the player {playerName} for spawning in the blocked spawnable {spawnableName}?",
+                        $"Are you sure you want to kick the player {playerName} for spawning in blocked spawnable {spawnableName}?",
                         confirmAction:
                         () =>
                         {

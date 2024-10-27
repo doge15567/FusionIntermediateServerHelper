@@ -7,7 +7,7 @@ Fusion Intermediate Server Helper is a mod that extends the capability of the se
 Fusion Intermediate Server Helper currently has 1 feature:
 
 - [Spawnable Blocking](#spawnable-blocking)
-### Spawnable blocking
+### Spawnable Blocking
 
 Spawnable blocking allows for blocking of certain spawnables from being blocked
 *Crazy, right?*
@@ -18,6 +18,7 @@ Bone Menu
 └ Fusion Intermediate Server Helper (Page)
   └ Spawnable Blocking (Page)
     ├ Enabled (bool): Toggles feature functionality 
+    ├ Spawn Blocked Spawnables Allowed Permission Level (PermissionLevel Enum): Changes what PermissionLevel is needed to spawn blocked spawnables.
     ├ Blocked Spawnables (Page): List of Blocked Spawnables
     | ├ Refresh (void): Refreshes the list of spawnables
     | └ Spawnable Name (Page): A page describing a spawnable that is blocked from being spawned. One of these is created for each blocked spawnable. 
