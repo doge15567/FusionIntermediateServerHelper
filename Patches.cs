@@ -40,7 +40,16 @@ namespace FusionIntermediateServerHelper
 
                         FusionPermissions.FetchPermissionLevel(playerId.LongId, out var playerPermissionLevel, out _);
 
-                        var wasAllowed = FusionPermissions.HasSufficientPermissions(playerPermissionLevel, Prefs.SpawnBlockedSpawnablesAllowed.Value);
+                        //var permissionLevel = Prefs.SpawnBlockedSpawnablesAllowed.Value == PermissionLevel.DEFAULT? PermissionLevel.OWNER : Prefs.SpawnBlockedSpawnablesAllowed.Value; // if default then owner else pref value // Didnt work
+
+                        PermissionLevel permissionLevel;
+                        if (Prefs.SpawnBlockedSpawnablesAllowed.Value == PermissionLevel.DEFAULT)
+                            permissionLevel = PermissionLevel.OWNER;
+                        else 
+                            permissionLevel = Prefs.SpawnBlockedSpawnablesAllowed.Value;
+
+
+                        var wasAllowed = FusionPermissions.HasSufficientPermissions(playerPermissionLevel, permissionLevel);
 
                         //Fusion code for getting cool name thingy
                         #region Player Name Display

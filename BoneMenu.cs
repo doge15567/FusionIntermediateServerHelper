@@ -7,6 +7,8 @@ using Il2CppSLZ.Bonelab;
 using Il2CppSLZ.Marrow.Warehouse;
 using Il2CppSLZ.Marrow.Pool;
 using LabFusion.Representation;
+using LabFusion.Entities;
+using LabFusion.Utilities;
 
 namespace FusionIntermediateServerHelper
 {
@@ -23,11 +25,11 @@ namespace FusionIntermediateServerHelper
                 _mainCategory = BoneLib.BoneMenu.Page.Root.CreatePage("Fusion Intermediate Server Helper", mainColor);
 
                 Page SpawnableBlockingPage = _mainCategory.CreatePage("Spawnable Blocking", Color.white);
-                SpawnableBlockingPage.CreateBoolPref("Enabled", Color.white, ref Prefs.SpawnableBlockingEnabled);
-                SpawnableBlockingPage.CreateEnumPref("Spawn Blocked Spawnables Allowed Permission Level", Color.white, ref Prefs.SpawnBlockedSpawnablesAllowed);
+                SpawnableBlockingPage.CreateBoolPref("Enabled", Color.white, ref Prefs.SpawnableBlockingEnabled, prefName: "SpawnableBlockingEnabled");
+                SpawnableBlockingPage.CreateEnumPref("Spawn Blocked Spawnables Allowed", Color.white, ref Prefs.SpawnBlockedSpawnablesAllowed);
                 _blockedItemsList = SpawnableBlockingPage.CreatePage("Blocked Spawnables", Color.white);
                 _blockedItemsList.CreateFunction("Refresh", Color.yellow, RefreshBlockedItems);
-                SpawnableBlockingPage.CreateFunction("Add Spawnable to Blocklist from Spawn Gun (Left Hand)", Color.white, () => 
+                SpawnableBlockingPage.CreateFunction("Add Spawnable to Blocklist from Spawn Gun (Left Hand)", Color.white, () =>
                 {
                     string errortext = "";
                     try
@@ -44,7 +46,7 @@ namespace FusionIntermediateServerHelper
 
                         string barcode = selectedCrate.Barcode._id;
                         MelonLog.Msg($"spawnable from gun has id {barcode}");
-                        
+
                         var blockeds = Prefs.GetBlockedBarcodes();
                         if (!blockeds.Contains(barcode))
                         {
@@ -54,7 +56,7 @@ namespace FusionIntermediateServerHelper
                             var title = TryGetTitleFromBarcode(barcode);
                             BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, $"Added {title} to blocklist!", 1.5f);
                         }
-                        else 
+                        else
                         { errortext = "Error: The spawnable selected is already blocked."; throw new Exception(); }
 
                     }
@@ -63,7 +65,7 @@ namespace FusionIntermediateServerHelper
                         BoneMenuNotif(BoneLib.Notifications.NotificationType.Error, errortext, .5f);
                     }
                 });
-                SpawnableBlockingPage.CreateFunction("Add Spawnable in hand to Blocklist", Color.white, () => 
+                SpawnableBlockingPage.CreateFunction("Add Spawnable in hand to Blocklist", Color.white, () =>
                 {
                     string errortext = "";
                     try
@@ -92,7 +94,7 @@ namespace FusionIntermediateServerHelper
                         BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, errortext);
                     }
                 });
-                SpawnableBlockingPage.CreateString("Add Spawnable to Blocklist from string", Color.white, "", (barcode) => 
+                SpawnableBlockingPage.CreateString("Add Spawnable to Blocklist from string", Color.white, "", (barcode) =>
                 {
                     var blockeds = Prefs.GetBlockedBarcodes();
                     if (!blockeds.Contains(barcode))
@@ -104,20 +106,63 @@ namespace FusionIntermediateServerHelper
                         BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, $"Added {title} to blocklist!", 1.5f);
                     }
                     else
-                    { BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, "Error: The spawnable selected is already blocked.", 1.5f);}
+                    { BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, "Error: The spawnable selected is already blocked.", 1.5f); }
                 });
-                // add pref for permission level allowed to spawn blocked spawnables
+
+                _mainCategory.CreateFunction("Despawn All", Color.white, () => Menu.DisplayDialog("Despawn All Confirmation", "Despawn all spawnables within the server?", confirmAction: () =>
+                    {
+                        if (NetworkInfo.HasServer)
+                        {
+                            if (NetworkInfo.IsServer)
+                            {
+                                // Loop through all NetworkProps and despawn them
+                                var entities = NetworkEntityManager.IdManager.RegisteredEntities.EntityIdLookup.Keys.ToArray();
+                                foreach (var networkEntity in entities)
+                                {
+
+
+                                    var prop = networkEntity.GetExtender<NetworkProp>();
+
+                                    if (prop == null)
+                                    {
+                                        Msg("Did not have NetworkProp, leaving this part of loop!", 2);
+                                        continue;
+                                    }
+
+                                    var poolee = networkEntity.GetExtender<PooleeExtender>();
+
+                                    if (poolee == null)
+                                    {
+                                        Msg("Did not have PooleeExtender, leaving this part of loop!", 2);
+                                        continue;
+                                    }
+
+                                    var player = networkEntity.GetExtender<NetworkPlayer>();
+
+                                    if (player != null)
+                                    {
+                                        Msg("Did have NetworkPlayer, leaving this part of loop!", 2);
+                                        continue;
+                                    }
+
+                                    PooleeUtilities.RequestDespawn(networkEntity.Id, false); // use RequestDespawn to despawn without particles, SendDespawn did not work.
+                                }
+                            }
+                            else BoneMenuNotif(BoneLib.Notifications.NotificationType.Warning, "Is not host");
+                        }
+                        else BoneMenuNotif(BoneLib.Notifications.NotificationType.Error, "Is not in server");
+                    }));
 
             }
 
-            public static void RefreshBlockedItems() 
+            public static void RefreshBlockedItems()
             {
                 _blockedItemsList.RemoveAll();
                 _blockedItemsList.CreateFunction("Refresh", Color.yellow, RefreshBlockedItems);
 
                 var blockeds = Prefs.GetBlockedBarcodes();
 
-                foreach(string barcode in  blockeds)
+                foreach (string barcode in blockeds)
                 {
                     var title = TryGetTitleFromBarcode(barcode);
 
@@ -139,7 +184,7 @@ namespace FusionIntermediateServerHelper
                 }
             }
 
-            public static void CreateNotifPage(Page page, PlayerId id, string barcode, string spawnableName, string playerName) 
+            public static void CreateNotifPage(Page page, PlayerId id, string barcode, string spawnableName, string playerName)
             {
                 // create function element with spawnable blocked, option to kick player, option to unblock spawnable.
                 // Fusion automaticaly creates dismiss and message
@@ -159,12 +204,12 @@ namespace FusionIntermediateServerHelper
                             {
                                 var newblockeds = blockeds.ToList();
                                 if (newblockeds.Remove(barcode))
-                                Prefs.SetBlockedBarcodes(newblockeds.ToArray());
+                                    Prefs.SetBlockedBarcodes(newblockeds.ToArray());
                             }
                         }
                     );
                 });
-                page.CreateFunction("Kick Player", Color.red, () => 
+                page.CreateFunction("Kick Player", Color.red, () =>
                 {
                     Menu.DisplayDialog(
                         $"Kick {playerName} for spawning {spawnableName}?",
@@ -176,7 +221,7 @@ namespace FusionIntermediateServerHelper
                         }
                     );
                 });
-                
+
 
             }
 

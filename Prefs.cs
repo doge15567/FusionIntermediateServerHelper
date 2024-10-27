@@ -29,7 +29,7 @@ namespace FusionIntermediateServerHelper
                 
                 SpawnableBlockingEnabled = GlobalCategory.GetEntry<bool>("SpawnableBlockingEnabled") ?? GlobalCategory.CreateEntry("SpawnableBlockingEnabled", false);
                 JSONStringListBlockedSpawnables = GlobalCategory.GetEntry<string>("JSONStringListBlockedSpawnables") ?? GlobalCategory.CreateEntry("JSONStringListBlockedSpawnables", defaultjson);
-                SpawnBlockedSpawnablesAllowed = GlobalCategory.GetEntry<PermissionLevel>("Spawn Blocked Spawnables Allowed") ?? GlobalCategory.CreateEntry("Spawn Blocked Spawnables Allowed", PermissionLevel.OWNER);
+                SpawnBlockedSpawnablesAllowed = GlobalCategory.GetEntry<PermissionLevel>("Spawn Blocked Spawnables Allowed") ?? GlobalCategory.CreateEntry("Spawn Blocked Spawnables Allowed", PermissionLevel.DEFAULT);
 
                 GlobalCategory.SaveToFile(false);
                 MelonLog.Msg("Initalised prefs");
