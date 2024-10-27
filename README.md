@@ -30,3 +30,5 @@ Bone Menu
 ```
 
 See [Actions tab](https://github.com/doge15567/FusionIntermediateServerHelper/actions) for beta builds!
+
+Post to the [Issues tab](https://github.com/doge15567/FusionIntermediateServerHelper/issues) to bring up issues and recommendations!
