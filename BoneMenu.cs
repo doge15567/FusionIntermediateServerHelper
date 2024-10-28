@@ -27,6 +27,7 @@ namespace FusionIntermediateServerHelper
                 Page SpawnableBlockingPage = _mainCategory.CreatePage("Spawnable Blocking", Color.white);
                 SpawnableBlockingPage.CreateBoolPref("Enabled", Color.white, ref Prefs.SpawnableBlockingEnabled, prefName: "SpawnableBlockingEnabled");
                 SpawnableBlockingPage.CreateEnumPref("Spawn Blocked Spawnables Allowed", Color.white, ref Prefs.SpawnBlockedSpawnablesAllowed);
+                SpawnableBlockingPage.CreateBoolPref("Regex Check Enabled", Color.white, ref Prefs.RegexCheckEnabled);
                 _blockedItemsList = SpawnableBlockingPage.CreatePage("Blocked Spawnables", Color.white);
                 _blockedItemsList.CreateFunction("Refresh", Color.yellow, RefreshBlockedItems);
                 SpawnableBlockingPage.CreateFunction("Add Spawnable to Blocklist from Spawn Gun (Left Hand)", Color.white, () =>
@@ -47,12 +48,12 @@ namespace FusionIntermediateServerHelper
                         string barcode = selectedCrate.Barcode._id;
                         MelonLog.Msg($"spawnable from gun has id {barcode}");
 
-                        var blockeds = Prefs.GetBlockedBarcodes();
+                        var blockeds = Prefs.GetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables);
                         if (!blockeds.Contains(barcode))
                         {
                             var newblockeds = blockeds.ToList();
                             newblockeds.Add(barcode);
-                            Prefs.SetBlockedBarcodes(newblockeds.ToArray());
+                            Prefs.SetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables, newblockeds.ToArray());
                             var title = TryGetTitleFromBarcode(barcode);
                             BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, $"Added {title} to blocklist!", 1.5f);
                         }
@@ -77,12 +78,12 @@ namespace FusionIntermediateServerHelper
 
                         string barcode = BoneLib.Player.GetComponentInHand<Poolee>(BoneLib.Player.LeftHand).SpawnableCrate.Barcode.ID;
 
-                        var blockeds = Prefs.GetBlockedBarcodes();
+                        var blockeds = Prefs.GetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables);
                         if (!blockeds.Contains(barcode))
                         {
                             var newblockeds = blockeds.ToList();
                             newblockeds.Add(barcode);
-                            Prefs.SetBlockedBarcodes(newblockeds.ToArray());
+                            Prefs.SetJSONStringArrayPref(ref Prefs.JSONStringListBlockedSpawnables, newblockeds.ToArray());
                             var title = TryGetTitleFromBarcode(barcode);
                             BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, $"Added {title} to blocklist!", 1.5f);
                         }
@@ -96,12 +97,12 @@ namespace FusionIntermediateServerHelper
                 });
                 SpawnableBlockingPage.CreateString("Add Spawnable to Blocklist from string", Color.white, "", (barcode) =>
                 {
-                    var blockeds = Prefs.GetBlockedBarcodes();
+                    var blockeds = Prefs.GetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables);
                     if (!blockeds.Contains(barcode))
                     {
                         var newblockeds = blockeds.ToList();
                         newblockeds.Add(barcode);
-                        Prefs.SetBlockedBarcodes(newblockeds.ToArray());
+                        Prefs.SetJSONStringArrayPref(ref Prefs.JSONStringListBlockedSpawnables, newblockeds.ToArray());
                         var title = TryGetTitleFromBarcode(barcode);
                         BoneMenuNotif(BoneLib.Notifications.NotificationType.Success, $"Added {title} to blocklist!", 1.5f);
                     }
@@ -160,7 +161,7 @@ namespace FusionIntermediateServerHelper
                 _blockedItemsList.RemoveAll();
                 _blockedItemsList.CreateFunction("Refresh", Color.yellow, RefreshBlockedItems);
 
-                var blockeds = Prefs.GetBlockedBarcodes();
+                var blockeds = Prefs.GetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables);
 
                 foreach (string barcode in blockeds)
                 {
@@ -170,12 +171,12 @@ namespace FusionIntermediateServerHelper
                     spawnablePage.CreateFunction($"Barcode: {barcode}", Color.white, null);
                     spawnablePage.CreateFunction("Unblock", Color.cyan, () =>
                     {
-                        var blockeds = Prefs.GetBlockedBarcodes();
+                        var blockeds = Prefs.GetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables);
                         if (blockeds.Contains(barcode))
                         {
                             var newblockeds = blockeds.ToList();
                             if (newblockeds.Remove(barcode))
-                                Prefs.SetBlockedBarcodes(newblockeds.ToArray());
+                                Prefs.SetJSONStringArrayPref(ref Prefs.JSONStringListBlockedSpawnables, newblockeds.ToArray());
                         }
 
                         Menu.OpenPage(_blockedItemsList);
@@ -199,12 +200,12 @@ namespace FusionIntermediateServerHelper
                         confirmAction:
                         () =>
                         {
-                            var blockeds = Prefs.GetBlockedBarcodes();
+                            var blockeds = Prefs.GetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables);
                             if (blockeds.Contains(barcode))
                             {
                                 var newblockeds = blockeds.ToList();
                                 if (newblockeds.Remove(barcode))
-                                    Prefs.SetBlockedBarcodes(newblockeds.ToArray());
+                                    Prefs.SetJSONStringArrayPref(ref Prefs.JSONStringListBlockedSpawnables, newblockeds.ToArray());
                             }
                         }
                     );

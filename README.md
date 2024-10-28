@@ -13,13 +13,20 @@ Fusion Intermediate Server Helper currently has 2 features:
 Spawnable blocking allows for blocking of certain spawnables from being blocked
 *Crazy, right?*
 
-Usage Breakdown
+When a spawnable is requested to spawn, the mod (when enabled) checks the spawnable's barcode to see if it is blocked.
+It does this in two ways:
+
+- Block list: The barcode is checked against a user-defined array of barcodes.
+- Regex match: The barcode is checked against a user-defined array of regex operations. If one matches, the spawnable is blocked.
+
+Menu Breakdown
 ```md
 Bone Menu
 └ Fusion Intermediate Server Helper (Page)
   └ Spawnable Blocking (Page)
     ├ Enabled (bool): Toggles feature functionality 
     ├ Spawn Blocked Spawnables Allowed Permission Level (PermissionLevel Enum): Changes what PermissionLevel is needed to spawn blocked spawnables.
+    ├ Regex Check Enabled (bool): Enables barcode checking against Regex list for blocking.
     ├ Blocked Spawnables (Page): List of Blocked Spawnables
     | ├ Refresh (Function): Refreshes the list of spawnables
     | └ Spawnable Name (Page): A page describing a spawnable that is blocked from being spawned. One of these is created for each blocked spawnable. 
@@ -36,7 +43,7 @@ Despawn All is a button that allows for quick access to Fusion's "Despawn All" f
 
 Usage Breakdown:
 ```md
-Bone Menu
+Menu Menu
 └ Fusion Intermediate Server Helper (Page)
   └ Despawn All (Function): Shows popup to confirm Despawn All action.
     └ Despawn All Confirmation (Function): Popup that despawns all spawnables in the server when confirmed. Shows error when not in a server or not the host.

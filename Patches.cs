@@ -7,6 +7,7 @@ using LabFusion.Player;
 using LabFusion.Extensions;
 using Il2CppSLZ.Marrow.Warehouse;
 using LabFusion.Representation;
+using System.Text.RegularExpressions;
 
 namespace FusionIntermediateServerHelper
 {
@@ -26,30 +27,76 @@ namespace FusionIntermediateServerHelper
                     {
                         return true; // allow original method to handle error
                     }
+#if DEBUG
+                    Msg("Patch of handling message");
+#endif
 
                     using var reader = FusionReader.Create(bytes);
                     var data = reader.ReadFusionSerializable<SpawnRequestData>();
 
-                    string[] blockedCodes = Prefs.GetBlockedBarcodes();
-                    if (blockedCodes.Contains(data.barcode))
+                    bool matched = false;
+
+                    #region Blocklist Check
+                    string[] blockedCodes = Prefs.GetJSONStringArrayPref( ref Prefs.JSONStringListBlockedSpawnables);
+#if DEBUG
+                    Msg($"Checking {data.barcode} against blocklist");
+#endif
+                    if (!matched) matched = matched||blockedCodes.Contains(data.barcode);
+#if DEBUG
+                    Msg($"Matched: {matched.ToString()}");
+#endif
+                    #endregion
+                    
+                    #region Rexex Check
+                    // Implement Regex checking
+                    if (!matched && Prefs.RegexCheckEnabled.Value)
                     {
-                        
+#if DEBUG
+                        Msg("Checking against regex list");
+#endif
+                        string[] sbRegexEntries = Prefs.GetJSONStringArrayPref(ref Prefs.JSONStringListRegexBlockedBarcodes);
+                        foreach (string strRegex in sbRegexEntries)
+                        {
+#if DEBUG
+                            Msg("Regex: "+strRegex);
+#endif
+                            Regex regex = new(strRegex);
+
+                            var iMatch = regex.IsMatch(data.barcode);
+
+                            matched = matched || iMatch;
+                            if (matched) break;
+                        }
+                    }
+                    #endregion
+
+
+                    if (matched)
+                    {
+#if DEBUG
+                        Msg("If Matched");
+#endif
                         var playerId = PlayerIdManager.GetPlayerId(data.owner);
 
-                        if (playerId == PlayerIdManager.LocalId) return true; // Kept this, as I still log when someone spawns a blocked spawnable, just no notif and dif text
-
+                        #region Permissions
                         FusionPermissions.FetchPermissionLevel(playerId.LongId, out var playerPermissionLevel, out _);
 
-                        //var permissionLevel = Prefs.SpawnBlockedSpawnablesAllowed.Value == PermissionLevel.DEFAULT? PermissionLevel.OWNER : Prefs.SpawnBlockedSpawnablesAllowed.Value; // if default then owner else pref value // Didnt work
-
-                        PermissionLevel permissionLevel;
+                        bool wasAllowed;
                         if (Prefs.SpawnBlockedSpawnablesAllowed.Value == PermissionLevel.DEFAULT)
-                            permissionLevel = PermissionLevel.OWNER;
-                        else 
-                            permissionLevel = Prefs.SpawnBlockedSpawnablesAllowed.Value;
-
-
-                        var wasAllowed = FusionPermissions.HasSufficientPermissions(playerPermissionLevel, permissionLevel);
+                        {
+#if DEBUG
+                            Msg("Case Permission level default");
+#endif
+                            wasAllowed = false; // use DEFAULT as none
+                        }
+                        else
+                        {
+                            wasAllowed = FusionPermissions.HasSufficientPermissions(playerPermissionLevel, Prefs.SpawnBlockedSpawnablesAllowed.Value);
+                        }
+#if DEBUG
+                        Msg("wasAllowed = "+wasAllowed.ToString());
+#endif
+                        #endregion
 
                         //Fusion code for getting cool name thingy
                         #region Player Name Display
