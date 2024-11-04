@@ -7,11 +7,12 @@ namespace FusionIntermediateServerHelper
     internal partial class Main : MelonMod
     {
         internal const string Name = "Fusion Intermediate Server Helper";
-        internal const string Description = "\"I,       am steve.\"";
+        internal const string Description = "Helper mod for common hosts of BONELAB Fusion lobbies";
         internal const string Author = "doge15567";
         internal const string Company = "";
-        internal const string Version = "1.0.1";
-        internal const string DownloadLink = "Link";
+        internal const string Version = "1.1.0";
+        internal const string VersionPlus = Version+" (Metadata Update)";
+        internal const string DownloadLink = "https://github.com/doge15567/FusionIntermediateServerHelper";
         internal static MelonLogger.Instance MelonLog;
         internal static Main Instance;
 
@@ -61,10 +62,12 @@ namespace FusionIntermediateServerHelper
             return Title;
         }
 
-        public static GUILayoutOption[] emptyOptions = Array.Empty<GUILayoutOption>();
+        // Might be useful while creating server stats
 
-        public override void OnGUI()
-        {
-        }
+        //public static GUILayoutOption[] emptyOptions = Array.Empty<GUILayoutOption>();
+
+        //public override void OnGUI()
+        //{
+        //}
     }
 }

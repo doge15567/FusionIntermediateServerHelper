@@ -18,6 +18,30 @@ namespace FusionIntermediateServerHelper
     {
         private partial class Patches
         {
+
+            public class LobbyCreatePatch // From https://github.com/notnotnotswipez/ModioModNetworker/blob/ab0fd8d56305fb870ac81e703226f2dd050df95b/ModioModNetworker/Patches/LobbyCreatePatch.cs#L18
+            {
+                [HarmonyPatch(typeof(LobbyMetadataHelper), "WriteInfo")]
+                public class LobbyMetaDataHelperPatch
+                {
+                    public static void Postfix(INetworkLobby lobby)
+                    {
+                        lobby.SetMetadata("fishassisted", "true");
+                        lobby.SetMetadata("fishversion", Main.VersionPlus);
+                        // implement server stats
+                        /* Ideas:
+                         * Unique Players seen
+                         * Spawnables Spawned
+                         * Spawnables Despawned
+                         * Levels Loaded
+                         * Players Killed
+                         */
+                    }
+                }
+            }
+
+
+
             [HarmonyPatch(typeof(SpawnRequestMessage))]
             public static class SpawnRequestMessagePatch
             {
@@ -144,7 +168,7 @@ namespace FusionIntermediateServerHelper
             }
 
             [HarmonyPatch(typeof(LabFusion.Entities.SpawnGunExtender))]
-            public static class SpawnGunOnRegisterPatch
+            public static class SpawnGunOnRegisterPatch // From https://github.com/Lakatrazz/BONELAB-Fusion/blob/9e2be403cc689598548fcf3e862d02e3781336d9/LabFusion/src/Entities/Components/Singular/SpawnGunExtender.cs#L12
             {
                 [HarmonyPrefix]
                 [HarmonyPatch("OnRegister")]
@@ -164,8 +188,9 @@ namespace FusionIntermediateServerHelper
                 }
 
             }
+            
             [HarmonyPatch(typeof(LabFusion.Entities.FlyingGunExtender))]
-            public static class FlyingGunOnRegisterPatch
+            public static class FlyingGunOnRegisterPatch // From https://github.com/Lakatrazz/BONELAB-Fusion/blob/9e2be403cc689598548fcf3e862d02e3781336d9/LabFusion/src/Entities/Components/Singular/FlyingGunExtender.cs#L12
             {
                 [HarmonyPrefix]
                 [HarmonyPatch("OnRegister")]
@@ -185,8 +210,6 @@ namespace FusionIntermediateServerHelper
                 }
 
             }
-
-            //Implement SpawnGun Despawn remover feature https://github.com/search?q=repo%3ALakatrazz%2FBONELAB-Fusion+_despawnHandler&type=code
 
         }
 

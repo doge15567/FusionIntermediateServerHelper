@@ -9,7 +9,7 @@ Fusion Intermediate Server Helper currently has 3 features:
 - [Spawnable Blocking](#spawnable-blocking)
 - [Despawn All (No Particles)](#despawn-all)
 - [Disable DevTools Despawning](#disable-devtools-cleanup)
-- 
+
 ### Spawnable Blocking
 
 Spawnable blocking allows for blocking of certain spawnables from being blocked
@@ -62,6 +62,13 @@ Bone Menu
   └ Disable DevTools Cleanup (bool): Enables/Disables feature.
 ```
 Note: DevTools created when the feature was inactive will still despawn when it is active, DevTools created when the feature was active will still not despawn when it is deactivated.
+
+### Credits
+
+[BONELAB Fusion](https://github.com/Lakatrazz/BONELAB-Fusion): Main mod that this extends, used as library & used code snippets
+[BoneLib](https://github.com/yowchap/BoneLib): Used as library
+[ModioModNetworker](https://github.com/notnotnotswipez/ModioModNetworker): Used code snippets
+
 
 ### Notes
 See [Actions tab](https://github.com/doge15567/FusionIntermediateServerHelper/actions) for builds.
