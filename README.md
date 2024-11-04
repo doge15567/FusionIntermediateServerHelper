@@ -4,10 +4,12 @@ Fusion Intermediate Server Helper is a mod that extends the capability of the se
 
 ## Features
 
-Fusion Intermediate Server Helper currently has 2 features:
+Fusion Intermediate Server Helper currently has 3 features:
 
 - [Spawnable Blocking](#spawnable-blocking)
 - [Despawn All (No Particles)](#despawn-all)
+- [Disable DevTools Despawning](#disable-devtools-cleanup)
+- 
 ### Spawnable Blocking
 
 Spawnable blocking allows for blocking of certain spawnables from being blocked
@@ -41,15 +43,27 @@ Bone Menu
 
 Despawn All is a button that allows for quick access to Fusion's "Despawn All" feature, slightly modified to not show despawn particles (workaround for voicechat / sound break bug)
 
-Usage Breakdown:
+Menu Breakdown:
 ```md
-Menu Menu
+Bone Menu
 └ Fusion Intermediate Server Helper (Page)
   └ Despawn All (Function): Shows popup to confirm Despawn All action.
     └ Despawn All Confirmation (Function): Popup that despawns all spawnables in the server when confirmed. Shows error when not in a server or not the host.
 ```
 
-### Notes
-See [Actions tab](https://github.com/doge15567/FusionIntermediateServerHelper/actions) for beta builds!
+### Disable DevTools Cleanup
 
-Post to the [Issues tab](https://github.com/doge15567/FusionIntermediateServerHelper/issues) to bring up issues and recommendations!
+Disable DevTools Cleanup is a feature which allows for the user to toggle having dev tools despawned after not being touched for a while
+
+Menu Breakdown:
+```md
+Bone Menu
+└ Fusion Intermediate Server Helper (Page)
+  └ Disable DevTools Cleanup (bool): Enables/Disables feature.
+```
+Note: DevTools created when the feature was inactive will still despawn when it is active, DevTools created when the feature was active will still not despawn when it is deactivated.
+
+### Notes
+See [Actions tab](https://github.com/doge15567/FusionIntermediateServerHelper/actions) for builds.
+
+Post to the [Issues tab](https://github.com/doge15567/FusionIntermediateServerHelper/issues) to bring up issues and recommendations.

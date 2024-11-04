@@ -154,6 +154,7 @@ namespace FusionIntermediateServerHelper
                         else BoneMenuNotif(BoneLib.Notifications.NotificationType.Error, "Is not in server");
                     }));
 
+                _mainCategory.CreateBoolPref("Disable DevTools Cleanup", Color.white, ref Prefs.DisableDevToolsCleanup);
             }
 
             public static void RefreshBlockedItems()

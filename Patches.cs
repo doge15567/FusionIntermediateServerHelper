@@ -8,6 +8,9 @@ using LabFusion.Extensions;
 using Il2CppSLZ.Marrow.Warehouse;
 using LabFusion.Representation;
 using System.Text.RegularExpressions;
+using LabFusion.Entities;
+using Il2CppSLZ.Bonelab;
+using Il2CppSLZ.Marrow;
 
 namespace FusionIntermediateServerHelper
 {
@@ -139,6 +142,52 @@ namespace FusionIntermediateServerHelper
                     return true;
                 }
             }
+
+            [HarmonyPatch(typeof(LabFusion.Entities.SpawnGunExtender))]
+            public static class SpawnGunOnRegisterPatch
+            {
+                [HarmonyPrefix]
+                [HarmonyPatch("OnRegister")]
+
+                public static bool Prefix(NetworkEntity networkEntity, SpawnGun component)
+                {
+                    if (Prefs.DisableDevToolsCleanup.Value)
+                    {
+#if DEBUG
+                        Msg("Prevented creation of TimedDeletion for SpawnGun!");
+#endif
+                        SpawnGunExtender.Cache.Add(component, networkEntity);
+                        return false;
+                    }
+                    return true;
+
+                }
+
+            }
+            [HarmonyPatch(typeof(LabFusion.Entities.FlyingGunExtender))]
+            public static class FlyingGunOnRegisterPatch
+            {
+                [HarmonyPrefix]
+                [HarmonyPatch("OnRegister")]
+
+                public static bool Prefix(NetworkEntity networkEntity, FlyingGun component)
+                {
+                    if (Prefs.DisableDevToolsCleanup.Value)
+                    {
+#if DEBUG
+                        Msg("Prevented creation of TimedDeletion for Nimbus Gun!");
+#endif
+                        FlyingGunExtender.Cache.Add(component, networkEntity);
+                        return false;
+                    }
+                    return true;
+
+                }
+
+            }
+
+            //Implement SpawnGun Despawn remover feature https://github.com/search?q=repo%3ALakatrazz%2FBONELAB-Fusion+_despawnHandler&type=code
+
         }
 
     }
