@@ -163,6 +163,13 @@ namespace FusionIntermediateServerHelper
                         });
                         return wasAllowed;
                     }
+
+                    // ServerStats
+                    if(data.owner != PlayerIdManager.LocalId)
+                        ServerStats.SpawnablesSpawned += 1;
+                    
+
+
                     return true;
                 }
             }
