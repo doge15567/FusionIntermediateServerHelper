@@ -149,7 +149,7 @@ namespace FusionIntermediateServerHelper
 
                         var allowedText = wasAllowed ? "was allowed." : "wasn't allowed!";
 
-                        var message = $"Player {display} attempted to spawn blocked {Title} and {allowedText} \n\n Would you like to kick this player?";
+                        var message = $"Player {display} attempted to spawn blocked {Title} and {allowedText} \n \n Would you like to kick this player?";
                         
                         FusionNotifier.Send(new FusionNotification()
                         {
