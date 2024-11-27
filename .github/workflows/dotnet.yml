@@ -29,7 +29,7 @@ jobs:
       uses: robinraju/release-downloader@v1.11
       with:
         repository: 'Lakatrazz/BONELAB-Fusion'
-        tag: 'v1.8.0'
+        tag: 'v1.9.0'
         fileName: 'LabFusion.dll'
         out-file-path: 'Resources'
     
