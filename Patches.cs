@@ -149,20 +149,29 @@ namespace FusionIntermediateServerHelper
 
                         var allowedText = wasAllowed ? "was allowed." : "wasn't allowed!";
 
-                        var message = $"Player {display} attempted to spawn blocked {Title} and {allowedText}";
+                        var message = $"Player {display} attempted to spawn blocked {Title} and {allowedText} \n \n Would you like to kick this player?";
+                        
                         FusionNotifier.Send(new FusionNotification()
                         {
-                            type = NotificationType.WARNING,
-                            isMenuItem = true,
-                            isPopup = !wasAllowed,
-                            message = message,
-                            popupLength = 1,
-                            title = "F.I.S.H Spawn Block",
-                            showTitleOnPopup = true,
-                            onCreateCategory = (page) => BoneMenu.CreateNotifPage(page, playerId, data.barcode, Title, display),
+                            Type = NotificationType.WARNING,
+                            SaveToMenu = true,
+                            ShowPopup = !wasAllowed,
+                            Message = message,
+                            PopupLength = 1,
+                            Title = "F.I.S.H Spawn Block",
+                            //showTitleOnPopup = true,
+                            OnAccepted = () => { NetworkHelper.KickUser(playerId); },
+                            //onCreateCategory = (page) => BoneMenu.CreateNotifPage(page, playerId, data.barcode, Title, display),
                         });
                         return wasAllowed;
                     }
+
+                    // ServerStats
+                    if(data.owner != PlayerIdManager.LocalId)
+                        ServerStats.SpawnablesSpawned += 1;
+                    
+
+
                     return true;
                 }
             }

@@ -13,7 +13,6 @@ Fusion Intermediate Server Helper currently has 3 features:
 ### Spawnable Blocking
 
 Spawnable blocking allows for blocking of certain spawnables from being blocked
-*Crazy, right?*
 
 When a spawnable is requested to spawn, the mod (when enabled) checks the spawnable's barcode to see if it is blocked.
 It does this in two ways:
@@ -65,9 +64,9 @@ Note: DevTools created when the feature was inactive will still despawn when it 
 
 ### Credits
 
-[BONELAB Fusion](https://github.com/Lakatrazz/BONELAB-Fusion): Main mod that this extends, used as library & used code snippets
-[BoneLib](https://github.com/yowchap/BoneLib): Used as library
-[ModioModNetworker](https://github.com/notnotnotswipez/ModioModNetworker): Used code snippets
+- [BONELAB Fusion](https://github.com/Lakatrazz/BONELAB-Fusion): Main mod that this extends, used as library & used code snippets
+- [BoneLib](https://github.com/yowchap/BoneLib): Used as library
+- [ModioModNetworker](https://github.com/notnotnotswipez/ModioModNetworker): Used code snippets
 
 
 ### Notes

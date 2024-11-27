@@ -10,8 +10,8 @@ namespace FusionIntermediateServerHelper
         internal const string Description = "Helper mod for common hosts of BONELAB Fusion lobbies";
         internal const string Author = "doge15567";
         internal const string Company = "";
-        internal const string Version = "1.1.0";
-        internal const string VersionPlus = Version+" (Metadata Update)";
+        internal const string Version = "1.1.1";
+        internal const string VersionPlus = Version+" (ServerStats)";
         internal const string DownloadLink = "https://github.com/doge15567/FusionIntermediateServerHelper";
         internal static MelonLogger.Instance MelonLog;
         internal static Main Instance;
@@ -28,6 +28,7 @@ namespace FusionIntermediateServerHelper
             Prefs.RefreshMelonPrefs();
             BoneMenu.Setup();
             MelonLog.Msg("Initialised Mod");
+            ServerStats.Setup();
         }
         public static void Msg(string message, int loggingMode = 0)
         {
@@ -64,10 +65,25 @@ namespace FusionIntermediateServerHelper
 
         // Might be useful while creating server stats
 
-        //public static GUILayoutOption[] emptyOptions = Array.Empty<GUILayoutOption>();
+#if DEBUG
+        public static GUILayoutOption[] emptyOptions = Array.Empty<GUILayoutOption>();
 
-        //public override void OnGUI()
-        //{
-        //}
+        public override void OnGUI()
+        {
+            // implement server stats
+            /* Ideas:
+             * Unique Players seen
+             * Spawnables Spawned
+             * Levels Loaded
+             * Players Killed
+             */
+            UnityEngine.GUILayout.Label($"----------------- FISH -----------------", emptyOptions);
+            UnityEngine.GUILayout.Label($"Players Seen: {ServerStats.PlayersSeen.ToString()}", emptyOptions);
+            UnityEngine.GUILayout.Label($"Spawnables Spawned: {ServerStats.SpawnablesSpawned.ToString()}", emptyOptions);
+            UnityEngine.GUILayout.Label($"Levels Loaded: {ServerStats.LevelsLoaded.ToString()}", emptyOptions);
+            UnityEngine.GUILayout.Label($"Player Deaths: {ServerStats.PlayerDeaths.ToString()}", emptyOptions);
+            UnityEngine.GUILayout.Label($"-----------------------------------------", emptyOptions);
+        }
+#endif
     }
 }

@@ -23,7 +23,7 @@ namespace FusionIntermediateServerHelper
 
             public static void Setup()
             {
-                MultiplayerHooking.OnLobbyCategoryCreated += OnLobbyCategoryMade;
+                //MultiplayerHooking.OnLobbyCategoryCreated += OnLobbyCategoryMade; // FIX LATER
 
                 _mainCategory = BoneLib.BoneMenu.Page.Root.CreatePage("Fusion Intermediate Server Helper", mainColor);
 
